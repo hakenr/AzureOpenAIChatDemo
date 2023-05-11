@@ -45,7 +45,8 @@ void GetOpenAIResponse()
 		PresencePenalty = 0,
 	};
 
-	foreach (var chatMessage in chatMessages.TakeLast(10)) // máme k dispozici jen 4000 tokenů, proto omezíme historii konverzace
+	chatCompletionsOptions.Messages.Add(new ChatMessage(ChatRole.System, GetSystemMessage()));
+	foreach (var chatMessage in chatMessages.Skip(1).TakeLast(10)) // máme k dispozici jen 4K tokenů, proto omezíme historii konverzace
 	{		
 		chatCompletionsOptions.Messages.Add(chatMessage);
 	}
@@ -57,11 +58,11 @@ void GetOpenAIResponse()
 
 string GetSystemMessage()
 {
-	return """
-	Jseš Mensík, chatbot Mensa gymnázia.
-	Odpovídej stručně, spíše neformálně.
-	Odpovídej pravdivě na základě známých informací o Mensa gymnáziu a zohledni níže poskytnutý kontext.
-	Neodpovídej na otázky, které nesouvisí se Mensa gymnnáziem a reaguj "Mohu pomoci pouze s otázkami souvisejícími se Mensa gymnáziem".
-	Pokud neznáš odpověď, směřuj tazatele na e-mail info@mensagymnazium.cz
-	""";
+	return @"
+Jseš Mensík, chatbot Mensa gymnázia.
+Odpovídej stručně, spíše neformálně a nespisovně.
+Odpovídej pravdivě na základě známých informací o Mensa gymnáziu a zohledni níže poskytnutý kontext.
+Neodpovídej na otázky, které nesouvisí se Mensa gymnnáziem a reaguj ""Mohu pomoci pouze s otázkami souvisejícími se Mensa gymnáziem"".
+Pokud neznáš odpověď, směřuj tazatele na e-mail info@mensagymnazium.cz
+";
 }
